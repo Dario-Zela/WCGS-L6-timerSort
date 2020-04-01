@@ -62,6 +62,7 @@ class MainClass
                 }
             } 
             while (swapped);
+            /*
             //Prints the array to the Console
             string output = "\n\n[";
             foreach (var item in tosort)
@@ -73,6 +74,7 @@ class MainClass
                 }
             }
             Console.WriteLine(output + "];");
+            */
             return;
         }
     }
@@ -84,6 +86,7 @@ class MainClass
         public override void sort(int[] tosort)
         {
             mergeSort(tosort);
+            /*
             string output = "\n\n[";
             foreach (var item in tosort)
             {
@@ -94,6 +97,7 @@ class MainClass
                 }
             }
             Console.WriteLine(output + "];");
+            */
             return;
         }
 
@@ -158,6 +162,7 @@ class MainClass
         public override void sort(int[] tosort)
         {
             quickSort(tosort, 0, tosort.Length - 1);
+            /*
             string output = "\n\n[";
             foreach (var item in tosort)
             {
@@ -168,6 +173,7 @@ class MainClass
                 }
             }
             Console.WriteLine(output + "];");
+            */
             return;
         }
 
@@ -216,6 +222,7 @@ class MainClass
         {
             int n = tosort.Length;
             heapSort(tosort, n);
+            /*
             string output = "\n\n[";
             foreach (var item in tosort)
             {
@@ -226,6 +233,7 @@ class MainClass
                 }
             }
             Console.WriteLine(output + "];");
+            */
             return;
         }
 
@@ -270,6 +278,49 @@ class MainClass
         }
     }
 
+    //Simple insertion sort
+    class insert : sorter
+    {
+        public insert() : base("insert") { }
+
+        public override void sort(int[] tosort)
+        {
+            insertsort(tosort);
+            /*
+            string output = "\n\n[";
+            foreach (var item in tosort)
+            {
+                output += "\"" + item + "\"";
+                if (item != tosort.Last())
+                {
+                    output += " , ";
+                }
+            }
+            Console.WriteLine(output + "];");
+            */
+        }
+
+        public void insertsort(int[] tosort)
+        {
+            Action<int, int> swap = new Action<int, int>((index, index2) =>
+            {
+                int temp = tosort[index2];
+                tosort[index2] = tosort[index];
+                tosort[index] = temp;
+            });
+            int length = tosort.Length;
+            for (int i = 0; i < length; i++)
+            {
+                int pos = i;
+                while (pos > 0 && tosort[pos] < tosort[pos - 1])
+                {
+                    swap(pos, pos - 1);
+                    pos--;
+                }
+            }
+        }
+    }
+
     public static void Main()
     {
         Stopwatch sw = new Stopwatch();
@@ -287,10 +338,16 @@ class MainClass
     /* 50 items = a bit longer */
     new int[] { 83, 8, 133, 156, 199, 92, 194, 52, 152, 197, 66, 154, 170, 138, 47, 130, 163, 106, 172, 128, 113, 181, 135, 15, 69, 182, 160, 140, 159, 200, 112, 169, 91, 65, 55, 131, 33, 63, 40, 150, 161, 9, 39, 62, 78, 145, 20, 32, 178, 94},
     /* 100 = should sort out the algos */
-    new int[] { 488, 243, 78, 486, 463, 418, 175, 306, 59, 90, 331, 13, 298, 50, 257, 448, 218, 464, 467, 356, 1, 120, 434, 98, 371, 154, 493, 270, 164, 96, 302, 237, 457, 299, 361, 38, 292, 60, 262, 128, 312, 136, 122, 310, 153, 80, 167, 93, 52, 296, 408, 11, 482, 39, 106, 475, 174, 181, 289, 31, 73, 274, 411, 178, 244, 316, 368, 201, 63, 221, 57, 236, 14, 235, 461, 47, 79, 10, 112, 421, 349, 211, 182, 319, 226, 375, 176, 111, 314, 108, 209, 238, 103, 304, 190, 255, 452, 422, 7, 500 }
-    }
-        ;
+    new int[] { 488, 243, 78, 486, 463, 418, 175, 306, 59, 90, 331, 13, 298, 50, 257, 448, 218, 464, 467, 356, 1, 120, 434, 98, 371, 154, 493, 270, 164, 96, 302, 237, 457, 299, 361, 38, 292, 60, 262, 128, 312, 136, 122, 310, 153, 80, 167, 93, 52, 296, 408, 11, 482, 39, 106, 475, 174, 181, 289, 31, 73, 274, 411, 178, 244, 316, 368, 201, 63, 221, 57, 236, 14, 235, 461, 47, 79, 10, 112, 421, 349, 211, 182, 319, 226, 375, 176, 111, 314, 108, 209, 238, 103, 304, 190, 255, 452, 422, 7, 500 },
+    new int[10000]
+        };
 
+        Random rng = new Random();
+        for(int i = 0; i < 10000; i++)
+        {
+            data[3][i] = rng.Next(10000);
+        }
+        
         //
         // Single Core - Implement the bubble and merge sort algorithms
         //
@@ -306,6 +363,11 @@ class MainClass
         // Quad Core - Implement heap sort
         //
         sorters.Add (new heap());
+
+        //
+        //Octa Core - Implement insert sort
+        //
+        sorters.Add(new insert());
 
         // Iterate through all the sort routines on the three sets of data to compare the alogorithm speed
         foreach (sorter s in sorters)
